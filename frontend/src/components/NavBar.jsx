@@ -74,6 +74,14 @@ const NavBar = () => {
                 >
                   Logout
                 </p>
+                <p
+                  onClick={() =>
+                    window.open("https://revora-admin.vercel.app/", "_blank")
+                  }
+                  className="cursor-pointer hover:text-purple"
+                >
+                  Admin Panel
+                </p>
               </div>
             </div>
           )}

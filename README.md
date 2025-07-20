@@ -1,34 +1,39 @@
-# 🛒 MERN E-Commerce Website
+# 🛒 Revora
 
-Welcome to the **MERN E-Commerce Website**! This project is a feature-rich e-commerce application built using the powerful MERN stack, complete with an intuitive user-facing store and an all-encompassing admin dashboard.
+**A Full-Featured MERN E-Commerce Platform**
+This project is a robust and dynamic e-commerce application built with the MERN stack, offering a seamless shopping experience for users and a comprehensive, easy-to-manage admin dashboard for store management.
+
+## Live Link
+
+🔗
 
 ## ✨ Features
 
-### 🌟 User Frontend:
+### 🎀 User Frontend:
 
-- **🔒 Secure Authentication**: Register, login, and manage user profiles effortlessly.
-- **🛍️ Product Exploration**: Browse and search through an extensive product catalog with advanced filtering options.
-- **🛒 Shopping Cart**: Add products to your cart, modify quantities, and proceed to a hassle-free checkout.
-- **💳 Seamless Payments**: Make secure payments using Stripe integration.
-- **📦 Order Management**: View order history, track deliveries, and manage returns with ease.
+- **🔒 Secure Authentication**: Secure login, registration, and profile management with JWT.
+- **🛍️ Product Exploration**: Search and filter products easily.
+- **🛒 Shopping Cart**: Add, update, and checkout items smoothly.
+- **💳 Seamless Payments**: Stripe integration for secure transactions.
+- **📦 Order Management**: View history, track deliveries, and manage returns.
 
 ### ⚙️ Admin Dashboard:
 
-- **🛠️ Product Management**: Add, update, or delete products with a user-friendly interface.
-- **📂 Category Management**: Organize products into categories for better navigation.
+- **🛠️ Product Management**: Add, update, or delete products.
+- **📂 Category Management**: Organize products into categories.
 - **📑 Order Management**: View, process, and update orders efficiently.
-- **👥 User Management**: Manage user roles and access levels.
+- **👥 User Management**: Manage user accounts and access levels.
 
 ## 🛠️ Tech Stack
 
-- **MongoDB**: Robust NoSQL database for storing all application data.
-- **Express.js**: Fast and minimalistic backend framework.
-- **React.js**: Modern frontend library for building dynamic user interfaces.
-- **Node.js**: JavaScript runtime environment for running the backend.
-- **Stripe**: Integrated payment gateway for processing transactions.
-- **JWT**: JSON Web Tokens for secure user sessions.
+- **MongoDB**: NoSQL database for flexible and scalable data storage.
+- **Express.js**:Lightweight backend framework for building APIs and handling server logic.
+- **React.js**: Modern JavaScript library for building dynamic and responsive user interfaces.
+- **Node.js**: Backend runtime environment to execute JavaScript on the server side.
+- **Stripe**: Integrated payment gateway to handle secure transactions.
+- **JWT**: JSON Web Tokens for secure authentication and session management.
 
-## 🗂️ Folder Structure
+## 🗂️ Project Structure
 
 ```plaintext
 /
@@ -39,7 +44,7 @@ Welcome to the **MERN E-Commerce Website**! This project is a feature-rich e-com
 |-- README.md         # Project documentation
 ```
 
-## 🤸 Quick Start
+## 🤸 Getting Started
 
 Follow these steps to set up the project locally on your machine.
 
@@ -54,7 +59,7 @@ Make sure you have the following installed on your machine:
 **Cloning the Repository**
 
 ```bash
-git clone https://github.com/MenathNDGD/MERN-Ecommerce.git
+git clone https://github.com/sanjidaaaziz/Revora-MERN-Ecommerce.git
 ```
 
 **Installation**
@@ -90,7 +95,9 @@ CLOUDINARY_CLOUD_NAME =
 
 JWT_SECRET =
 
-ADMIN_EMAIL = "admin@trendify.com" #For testing only
+STRIPE_SECRET_KEY =
+
+ADMIN_EMAIL = "admin@revora.com" #For testing only
 
 ADMIN_PASSWORD = "admin@123" #For testing only
 
@@ -146,3 +153,15 @@ Open [http://localhost:5174](http://localhost:5174) in your browser to view the 
 Open [http://localhost:400](http://localhost:400) in your browser to run the backend.
 
 Open [http://localhost:5173](http://localhost:5173) in your browser to view the frontend project.
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/your-feature-name`)
+3. Commit your changes (`git commit -m 'Add your message'`)
+4. Push to the branch (`git push origin feature/your-feature-name`)
+5. Open a Pull Request with a clear description of your changes
+
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
