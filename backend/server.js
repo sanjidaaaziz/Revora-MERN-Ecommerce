@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import "dotenv/config";
+import serverless from "serverless-http";
 import connectDB from "./config/mongodb.js";
 import connectCloudinary from "./config/cloudinary.js";
 import userRouter from "./routes/userRoute.js";
@@ -11,7 +12,7 @@ import newsletterRoutes from "./routes/newsletter.js";
 
 // INFO: Create express app
 const app = express();
-const port = process.env.PORT || 4000;
+//const port = process.env.PORT || 4000;
 connectDB();
 connectCloudinary();
 
@@ -33,6 +34,8 @@ app.get("/", (req, res) => {
 });
 
 // INFO: Start server
-app.listen(port, () =>
-  console.log(`Server is running on at http://localhost:${port}`)
-);
+// app.listen(port, () =>
+//   console.log(`Server is running on at http://localhost:${port}`)
+// );
+export const handler = serverless(app);
+export default app;
