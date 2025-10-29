@@ -5,8 +5,8 @@ This project is a robust and dynamic e-commerce application built with the MERN 
 
 ## Live Link
 
-🔗 https://revora-shop.vercel.app -> User Panel
-🔗 https://revora-admin.vercel.app -> Admin Panel
+- 🔗 https://revora-shop.vercel.app -> User Panel
+- 🔗 https://revora-admin.vercel.app -> Admin Panel
 
 ## ✨ Features
 
