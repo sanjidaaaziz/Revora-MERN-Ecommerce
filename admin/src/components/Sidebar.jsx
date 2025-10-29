@@ -34,7 +34,7 @@ const Sidebar = () => {
           }
           to={"/list"}
         >
-          <img className="w-6 h-6" src={assets.parcel_icon} alt="List Items" />
+          <img className="w-6 h-6" src={assets.list_icon} alt="List Items" />
           <p className="hidden md:block">List Items</p>
         </NavLink>
         <NavLink
@@ -43,7 +43,11 @@ const Sidebar = () => {
           }
           to={"/orders"}
         >
-          <img className="w-6 h-6" src={assets.order_icon} alt="Add Products" />
+          <img
+            className="w-6 h-6"
+            src={assets.parcel_icon}
+            alt="Add Products"
+          />
           <p className="hidden md:block">View Orders</p>
         </NavLink>
         <NavLink
