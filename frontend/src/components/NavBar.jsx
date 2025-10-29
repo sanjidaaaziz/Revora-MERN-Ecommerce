@@ -143,9 +143,9 @@ const NavBar = () => {
 
       {/* Sidebar Menu for Mobile */}
       <div
-        className={`absolute top-0 right-0 bottom-0 overflow-hidden bg-white transition-all ${
-          visible ? "w-full" : "w-0"
-        }`}
+        className={`fixed top-0 left-0 w-full h-full overflow-hidden bg-white bg-opacity-95 transition-all z-50 ${
+          visible ? "translate-x-0" : "translate-x-full"
+        } transform`}
       >
         <div className="flex flex-col text-gray-600">
           <div
