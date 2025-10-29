@@ -5,7 +5,8 @@ This project is a robust and dynamic e-commerce application built with the MERN 
 
 ## Live Link
 
-🔗 https://revora-psi.vercel.app
+🔗 https://revora-shop.vercel.app -> User Panel
+🔗 https://revora-admin.vercel.app -> Admin Panel
 
 ## ✨ Features
 
@@ -96,10 +97,6 @@ CLOUDINARY_CLOUD_NAME =
 JWT_SECRET =
 
 STRIPE_SECRET_KEY =
-
-ADMIN_EMAIL = "admin@revora.com" #For testing only
-
-ADMIN_PASSWORD = "admin@123" #For testing only
 
 ```
 
