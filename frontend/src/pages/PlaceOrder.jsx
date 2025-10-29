@@ -17,6 +17,7 @@ const PlaceOrder = () => {
     getCartAmount,
     delivery_fee,
     products,
+    userId,
   } = useContext(ShopContext);
 
   const [formData, setFormData] = useState({
@@ -31,79 +32,74 @@ const PlaceOrder = () => {
     phone: "",
   });
 
-  const onChangehandler = (event) => {
-    const name = event.target.name;
-    const value = event.target.value;
-
-    setFormData((data) => ({ ...data, [name]: value }));
+  const onChangeHandler = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const onSubmitHandler = async (event) => {
-    event.preventDefault();
-    try {
-      let orderItems = [];
-      for (const items in cartItems) {
-        for (const item in cartItems[items]) {
-          if (cartItems[items][item] > 0) {
-            const itemInfo = structuredClone(
-              products.find((product) => product._id === items)
-            );
-            if (itemInfo) {
-              itemInfo.size = item;
-              itemInfo.quantity = cartItems[items][item];
-              orderItems.push(itemInfo);
-            }
+  const onSubmitHandler = async (e) => {
+    e.preventDefault();
+
+    if (!token) {
+      toast.error("Please login to place an order");
+      navigate("/login");
+      return;
+    }
+
+    let orderItems = [];
+
+    // Prepare items array
+    for (const itemId in cartItems) {
+      for (const size in cartItems[itemId]) {
+        if (cartItems[itemId][size] > 0) {
+          const itemInfo = structuredClone(
+            products.find((product) => product._id === itemId)
+          );
+          if (itemInfo) {
+            itemInfo.size = size;
+            itemInfo.quantity = cartItems[itemId][size];
+            orderItems.push(itemInfo);
           }
         }
       }
+    }
 
-      let orderData = {
-        address: formData,
-        items: orderItems,
-        amount: getCartAmount() + delivery_fee,
-      };
+    if (orderItems.length === 0) {
+      toast.error("Your cart is empty");
+      return;
+    }
 
-      switch (method) {
-        // API Calls for COD
-        case "cod":
+    const orderData = {
+      address: formData,
+      items: orderItems,
+      amount: getCartAmount() + delivery_fee,
+    };
+
+    try {
+      if (method === "cod") {
+        const response = await axios.post(
+          `${backendUrl}/api/order/place`,
+          orderData,
           {
-            const response = await axios.post(
-              backendUrl + "/api/order/place",
-              orderData,
-              { headers: { token } }
-            );
-
-            if (response.data.success) {
-              setCartItems({});
-              navigate("/orders");
-            } else {
-              toast.error(response.data.message);
-            }
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           }
-          break;
+        );
 
-        // case "stripe":
-        //   {
-        //     const responseStripe = await axios.post(
-        //       backendUrl + "/api/order/stripe",
-        //       orderData,
-        //       { headers: { token } }
-        //     );
-        //     if (responseStripe.data.success) {
-        //       const { session_url } = responseStripe.data;
-        //       window.location.replace(session_url);
-        //     } else {
-        //       toast.error(responseStripe.data.message);
-        //     }
-        //   }
-        //   break;
-
-        default:
-          break;
+        if (response.data.success) {
+          toast.success("Order placed successfully!");
+          setCartItems({});
+          navigate("/orders"); // Go to orders page after success
+        } else {
+          toast.error(response.data.message || "Order failed");
+        }
+      } else {
+        toast.error("Payment method not implemented yet");
       }
     } catch (error) {
       console.log(error);
-      toast.error(error.message);
+      toast.error(error.response?.data?.message || error.message);
     }
   };
 
@@ -112,108 +108,99 @@ const PlaceOrder = () => {
       onSubmit={onSubmitHandler}
       className="flex flex-col justify-between gap-4 pt-5 sm:flex-row sm:pt-14 min-h-[80vh] border-t"
     >
-      {/* Left Side Content */}
+      {/* Left Side: Delivery Info */}
       <div className="flex flex-col w-full gap-4 sm:max-w-[480px]">
         <div className="my-3 text-xl sm:text-2xl">
-          <Title text1={"DELIVERY"} text2={"INFORMATION"} />
+          <Title text1="DELIVERY" text2="INFORMATION" />
         </div>
         <div className="flex gap-3">
           <input
             required
-            onChange={onChangehandler}
             name="firstName"
             value={formData.firstName}
-            className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-2 focus:border-purple"
-            type="text"
+            onChange={onChangeHandler}
             placeholder="First Name"
+            className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-2 focus:border-purple"
           />
           <input
             required
-            onChange={onChangehandler}
             name="lastName"
             value={formData.lastName}
-            className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-2 focus:border-purple"
-            type="text"
+            onChange={onChangeHandler}
             placeholder="Last Name"
+            className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-2 focus:border-purple"
           />
         </div>
         <input
           required
-          onChange={onChangehandler}
           name="email"
           value={formData.email}
-          className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-2 focus:border-purple"
-          type="email"
+          onChange={onChangeHandler}
           placeholder="Email Address"
+          className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-2 focus:border-purple"
         />
         <input
           required
-          onChange={onChangehandler}
           name="street"
           value={formData.street}
-          className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-2 focus:border-purple"
-          type="text"
+          onChange={onChangeHandler}
           placeholder="Street"
+          className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-2 focus:border-purple"
         />
         <div className="flex gap-3">
           <input
             required
-            onChange={onChangehandler}
             name="city"
             value={formData.city}
-            className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-2 focus:border-purple"
-            type="text"
+            onChange={onChangeHandler}
             placeholder="City"
+            className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-2 focus:border-purple"
           />
           <input
             required
-            onChange={onChangehandler}
             name="state"
             value={formData.state}
-            className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-2 focus:border-purple"
-            type="text"
+            onChange={onChangeHandler}
             placeholder="State"
+            className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-2 focus:border-purple"
           />
         </div>
         <div className="flex gap-3">
           <input
             required
-            onChange={onChangehandler}
             name="zipcode"
             value={formData.zipcode}
-            className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-2 focus:border-purple"
-            type="number"
+            onChange={onChangeHandler}
             placeholder="Zip Code"
+            type="number"
+            className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-2 focus:border-purple"
           />
           <input
             required
-            onChange={onChangehandler}
             name="country"
             value={formData.country}
-            className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-2 focus:border-purple"
-            type="text"
+            onChange={onChangeHandler}
             placeholder="Country"
+            className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-2 focus:border-purple"
           />
         </div>
         <input
           required
-          onChange={onChangehandler}
           name="phone"
           value={formData.phone}
-          className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-2 focus:border-purple"
-          type="number"
+          onChange={onChangeHandler}
           placeholder="Phone"
+          type="number"
+          className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-2 focus:border-purple"
         />
       </div>
-      {/* Right Side Content */}
-      <div className="mt-8">
-        <div className="mt-8 min-w-80">
-          <CartTotal />
-        </div>
-        {/* Payment Methods Selection */}
+
+      {/* Right Side: Cart Total & Payment */}
+      <div className="mt-8 sm:mt-0">
+        <CartTotal />
         <div className="mt-12">
-          <Title text1={"PAYMENT"} text2={"METHODS"} />
-          <div className="flex flex-col gap-3 lg:flex-row">
+          <Title text1="PAYMENT" text2="METHODS" />
+          <div className="flex flex-col gap-3 lg:flex-row mt-4">
             <div
               onClick={() => setMethod("stripe")}
               className="flex items-center gap-3 p-2 px-3 border cursor-pointer"
@@ -225,7 +212,7 @@ const PlaceOrder = () => {
               ></p>
               <img className="h-5 mx-4" src={assets.stripe_logo} alt="Stripe" />
             </div>
-            <div
+            {/* <div
               onClick={() => setMethod("razorpay")}
               className="flex items-center gap-3 p-2 px-3 border cursor-pointer"
             >
@@ -239,7 +226,7 @@ const PlaceOrder = () => {
                 src={assets.razorpay_logo}
                 alt="RazorPay"
               />
-            </div>
+            </div> */}
             <div
               onClick={() => setMethod("cod")}
               className="flex items-center gap-3 p-2 px-3 border cursor-pointer"

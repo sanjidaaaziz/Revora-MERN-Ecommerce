@@ -10,6 +10,19 @@ const Sidebar = () => {
           className={
             "flex items-center gap-3 border border-gray-300 border-r-0 px-3 py-2 rounded-l bg-white  "
           }
+          to={"/dashboard"}
+        >
+          <img
+            className="w-6 h-6"
+            src={assets.dashboard_icon}
+            alt="Add Items"
+          />
+          <p className="hidden  md:block">Admin Dashboard</p>
+        </NavLink>
+        <NavLink
+          className={
+            "flex items-center gap-3 border border-gray-300 border-r-0 px-3 py-2 rounded-l bg-white  "
+          }
           to={"/add"}
         >
           <img className="w-6 h-6" src={assets.add_icon} alt="Add Items" />
@@ -32,6 +45,15 @@ const Sidebar = () => {
         >
           <img className="w-6 h-6" src={assets.order_icon} alt="Add Products" />
           <p className="hidden md:block">View Orders</p>
+        </NavLink>
+        <NavLink
+          className={
+            "flex items-center gap-3 border border-gray-300 border-r-0 px-3 py-2 rounded-l bg-white"
+          }
+          to={"/users"}
+        >
+          <img className="w-6 h-6" src={assets.user_icon} alt="All users" />
+          <p className="hidden md:block">Users</p>
         </NavLink>
       </div>
     </div>

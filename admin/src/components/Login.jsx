@@ -3,28 +3,40 @@ import { assets } from "../assets/assets";
 import axios from "axios";
 import { backendUrl } from "../App";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const Login = ({ setToken }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const onSubmitHandler = async (e) => {
+    e.preventDefault();
+
     try {
-      e.preventDefault();
-      const response = await axios.post(backendUrl + "/api/user/admin", {
+      const response = await axios.post(`${backendUrl}/api/user/admin`, {
         email,
         password,
       });
 
       if (response.data.success) {
-        setToken(response.data.token);
-        toast.success("Login successful.");
+        const newToken = response.data.token;
+
+        // ✅ Save token in both localStorage and React state
+        localStorage.setItem("token", newToken);
+        setToken(newToken);
+
+        toast.success("Login successful!");
+        navigate("/dashboard", { state: { token: response.data.token } });
+
+        // ✅ Notify other tabs/components (Dashboard will listen for this)
+        window.dispatchEvent(new Event("storage"));
       } else {
-        toast.error(response.data.message);
+        toast.error(response.data.message || "Login failed.");
       }
     } catch (error) {
-      console.error(error);
-      toast.error("Please try again later.");
+      console.error("Login Error:", error);
+      toast.error(error.response?.data?.message || "Please try again later.");
     }
   };
 

@@ -15,9 +15,22 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    contact: {
+      type: String,
+      required: true,
+    },
+    role: {
+      type: String,
+      enum: ["user", "admin"],
+      default: "user", // normal users by default
+    },
     cartData: {
       type: Object,
       default: {},
+    },
+    isBlocked: {
+      type: Boolean,
+      default: false,
     },
   },
   { minimize: false }

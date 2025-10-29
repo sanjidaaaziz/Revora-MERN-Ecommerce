@@ -19,18 +19,15 @@ const productSchema = new mongoose.Schema({
   },
   category: {
     type: String,
-    required: true,
-  },
-  subCategory: {
-    type: String,
-    required: true,
+    required: true, // dynamic category
   },
   sizes: {
     type: Array,
-    required: true,
+    default: [], // optional
   },
   bestSeller: {
     type: Boolean,
+    default: false,
   },
   date: {
     type: Number,
@@ -38,6 +35,7 @@ const productSchema = new mongoose.Schema({
   },
 });
 
-const productModel = mongoose.models.product || mongoose.model("product", productSchema);
+const productModel =
+  mongoose.models.product || mongoose.model("product", productSchema);
 
 export default productModel;

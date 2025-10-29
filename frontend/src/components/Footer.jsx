@@ -34,10 +34,10 @@ const Footer = () => {
             <Link to="/about">
               <li>About Us</li>
             </Link>
-            <Link to="/about">
-              <li>Delivery</li>
+            <Link to="/contact">
+              <li>Contact</li>
             </Link>
-            <Link to="/about">
+            <Link to="/privacy">
               <li>Privacy & Policy</li>
             </Link>
           </ul>
@@ -47,7 +47,7 @@ const Footer = () => {
           <p className="mb-5 text-xl font-medium">GET IN TOUCH</p>
           <ul className="flex flex-col gap-1 text-gray-600">
             <li>+11-235-696-557</li>
-            <li>info@revora.com</li>
+            <li>support@revora.com</li>
             <li>sanjidaaziz5@gmail.com</li>
           </ul>
         </div>

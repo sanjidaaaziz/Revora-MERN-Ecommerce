@@ -1,6 +1,4 @@
-import React from "react";
-import { useEffect } from "react";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { backendUrl, currency } from "../App";
 import { toast } from "react-toastify";
@@ -9,16 +7,17 @@ import { assets } from "../assets/assets";
 const Orders = ({ token }) => {
   const [orders, setOrders] = useState([]);
 
+  // Fetch all orders
   const fetchAllOrders = async () => {
-    if (!token) {
-      return null;
-    }
+    if (!token) return null;
 
     try {
       const response = await axios.post(
         backendUrl + "/api/order/list",
         {},
-        { headers: { token } }
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
       );
 
       if (response.data.success) {
@@ -31,6 +30,7 @@ const Orders = ({ token }) => {
     }
   };
 
+  // Update order status
   const statusHandler = async (event, orderId) => {
     try {
       const response = await axios.post(
@@ -39,14 +39,39 @@ const Orders = ({ token }) => {
           orderId,
           status: event.target.value,
         },
-        { headers: { token } }
+        { headers: { Authorization: `Bearer ${token}` } } // ✅ fixed
       );
+
       if (response.data.success) {
         await fetchAllOrders();
       }
     } catch (error) {
       console.log(error);
-      toast.error(response.data.message);
+      toast.error(error.response?.data?.message || error.message);
+    }
+  };
+
+  // Update payment status
+  const paymentHandler = async (event, orderId) => {
+    try {
+      const response = await axios.post(
+        backendUrl + "/api/order/payment-status",
+        {
+          orderId,
+          paymentStatus: event.target.value,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` }, // ✅ must be admin token
+        }
+      );
+
+      if (response.data.success) {
+        toast.success("Payment status updated");
+        await fetchAllOrders();
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error(error.response?.data?.message || error.message);
     }
   };
 
@@ -56,7 +81,7 @@ const Orders = ({ token }) => {
 
   return (
     <div>
-      <h3>Order Page</h3>
+      <h3 className="text-2xl font-semibold mb-4">All Orders</h3>
       <div>
         {orders.map((order, index) => (
           <div
@@ -64,23 +89,16 @@ const Orders = ({ token }) => {
             key={index}
           >
             <img className="w-12" src={assets.parcel_icon} alt="" />
+
+            {/* Order Items & Address */}
             <div>
               <div>
-                {order.items.map((item, index) => {
-                  if (index === order.items.length - 1) {
-                    return (
-                      <p className="py-0.5" key={index}>
-                        {item.name} x {item.quantity} <span>{item.size}</span>
-                      </p>
-                    );
-                  } else {
-                    return (
-                      <p className="py-0.5" key={index}>
-                        {item.name} x {item.quantity} <span>{item.size}</span>,
-                      </p>
-                    );
-                  }
-                })}
+                {order.items.map((item, i) => (
+                  <p className="py-0.5" key={i}>
+                    {item.name} x {item.quantity} <span>{item.size}</span>
+                    {i !== order.items.length - 1 && ","}
+                  </p>
+                ))}
               </div>
               <p className="mt-3 mb-2 font-medium">
                 {order.address.firstName + " " + order.address.lastName}
@@ -99,19 +117,41 @@ const Orders = ({ token }) => {
               </div>
               <p>{order.address.phone}</p>
             </div>
+
+            {/* Order Info */}
             <div>
               <p className="text-sm sm:text-[15px]">
-                Items : {order.items.length}
+                Items: {order.items.length}
               </p>
-              <p className="mt-3">Method : {order.paymentMethod}</p>
-              <p>Payment : {order.payment ? "Done" : "Pending"}</p>
-              <p>Date : {new Date(order.date).toDateString()}</p>
+              <p className="mt-2">Method: {order.paymentMethod}</p>
+
+              {/* Payment Status */}
+              <div className="mt-2">
+                <label className="font-semibold mr-2">Payment:</label>
+                <select
+                  onChange={(event) => paymentHandler(event, order._id)}
+                  value={
+                    order.paymentStatus || (order.payment ? "Paid" : "Pending")
+                  }
+                  className="p-1 text-sm border rounded"
+                >
+                  <option value="Pending">Pending</option>
+                  <option value="Paid">Paid</option>
+                </select>
+              </div>
+
+              <p className="mt-2">
+                Date: {new Date(order.date).toDateString()}
+              </p>
             </div>
+
+            {/* Amount */}
             <p className="text-sm sm:text-[15px]">
-              {" "}
               ${currency}
               {order.amount}
             </p>
+
+            {/* Order Status */}
             <select
               onChange={(event) => statusHandler(event, order._id)}
               value={order.status}
