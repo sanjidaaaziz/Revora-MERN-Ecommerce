@@ -1,6 +1,6 @@
 // server/routes/newsletter.js
 import express from "express";
-import Newsletter from "../models/Newsletter.js"; // MongoDB model
+import Newsletter from "../models/newsletter.js"; // MongoDB model
 
 const router = express.Router();
 
