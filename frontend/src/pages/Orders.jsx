@@ -79,7 +79,6 @@ const Orders = () => {
               ))}
 
               {/* Order info */}
-              {/* Order info */}
               <div className="flex flex-col gap-1 text-sm mt-2">
                 <p>
                   Date:{" "}
@@ -97,7 +96,7 @@ const Orders = () => {
                 </p>
                 <p>
                   Total Payment:{" "}
-                  <span className="font-semibold text-gray-700">
+                  <span className="text-gray-400">
                     {currency} {order.amount}
                   </span>
                 </p>
