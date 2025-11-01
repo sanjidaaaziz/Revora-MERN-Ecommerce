@@ -85,16 +85,61 @@ const userOrders = async (req, res) => {
 };
 
 // Update Order Status
+// const updateStatus = async (req, res) => {
+//   try {
+//     const { orderId, status } = req.body;
+//     await orderModel.findByIdAndUpdate(orderId, { status });
+//     res.json({ success: true, message: "Status Updated" });
+//   } catch (error) {
+//     console.log(error);
+//     res.json({ success: false, message: error.message });
+//   }
+// };
+
+// Update Order Status (Admin Only)
 const updateStatus = async (req, res) => {
   try {
     const { orderId, status } = req.body;
-    await orderModel.findByIdAndUpdate(orderId, { status });
-    res.json({ success: true, message: "Status Updated" });
+
+    const validStatuses = [
+      "Order Placed",
+      "Packing",
+      "Shipped",
+      "Out for Delivery",
+      "Delivered",
+    ];
+
+    if (!validStatuses.includes(status)) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid order status" });
+    }
+
+    const updated = await orderModel.findByIdAndUpdate(
+      orderId,
+      { status },
+      { new: true }
+    );
+
+    if (!updated) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Order not found" });
+    }
+
+    res.json({
+      success: true,
+      message: "Order status updated",
+      order: updated,
+    });
   } catch (error) {
-    console.log(error);
-    res.json({ success: false, message: error.message });
+    console.error(error);
+    res
+      .status(500)
+      .json({ success: false, message: "Error updating order status" });
   }
 };
+
 // Update Payment Status (Admin Only)
 const updatePaymentStatus = async (req, res) => {
   try {
